@@ -15,7 +15,7 @@ This time, we are concerned about this working accross tabs and page reloads. Th
 
 2. Update files and folders for your solution inside `src`.
 
-### **3. Get Coding!** 🚀
+### **2. Get Coding!** 🚀
 
 ## Recommended Folder Structure
 
