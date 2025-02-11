@@ -1,5 +1,7 @@
 # FAC Browser Extension Workshop: Heading Highlighter
 
+---
+
 ## The Problem
 
 We need to make an accessibility tool that can visually audit our webpage's coded heading hierarchy. For this, we want a browser extension that can access the page that we are on, find all html heading elements and highlight them in a colour that will stand out.
@@ -8,6 +10,10 @@ We are not concerned about this working accross tabs and page reloads.
 
 > [!TIP]
 > We will need a content script to interact with the page's DOM elements. Because we are not concerned with preserving our highlight state accross tabs and page reloads, we do not need a background script and can run everything through [chrome's scripting service](https://developer.chrome.com/docs/extensions/reference/api/scripting) and [window messaging](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
+
+If you have completed this and want to continue with this challenge, go to the [stretch goal branch](https://github.com/TandemCreativeDev/fac-ws_extensions_heading-highlighter/tree/stretch) and learn more about plasmo's messaging API.
+
+---
 
 ## Getting Set Up
 
@@ -25,12 +31,12 @@ pnpm create plasmo --with-tailwindcss
 pnpm create plasmo
 ```
 
-2. Name the project `heading-highlighter-1` and run through the other setup configuration options.
+2. Name the project `heading-highlighter` and run through the other setup configuration options.
 
 3. Go into the project folder:
 
 ```sh
-cd heading-highlighter-1
+cd heading-highlighter
 ```
 
 4. Open in your favourite code editor (if configured):
@@ -71,6 +77,8 @@ src/
 > [!NOTE]
 > This is not the only way to solve this problem, but for plasmo to work you will need as a minimum `popup.tsx` in the `src` folder and either `content.ts` in the `src` folder or a `contents` folder with code files that interact with the webpages' DOM elements.
 
+---
+
 ## Run Solution
 
 If you want to run this solution to see what it should look like, follow these steps:
@@ -84,15 +92,7 @@ git clone https://github.com/TandemCreativeDev/fac-ws_extensions_heading-highlig
 cd fac-ws_extensions_heading-highlighter
 ```
 
-### **2. Change Branch**
-
-Checkout the branch for this exercise by running:
-
-```sh
-git checkout exercise1
-```
-
-### **3. Install Dependencies**
+### **2. Install Dependencies**
 
 Ensure you have **Node.js** and **pnpm** installed. Then, install Plasmo dependencies:
 
@@ -102,7 +102,7 @@ pnpm install
 
 The following step can be used in your project aswell to test changes you make in the code dynamically:
 
-### **4. Run in Development Mode**
+### **3. Run in Development Mode**
 
 You can run the extension in **development mode** to test it live:
 
