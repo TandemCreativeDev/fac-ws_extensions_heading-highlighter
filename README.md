@@ -20,8 +20,8 @@ This is a simple Chrome extension built with **Plasmo** that allows users to tog
 In your work directory, run this command to clone the repo and go into the local repo folder:
 
 ```sh
-git clone https://github.com/maxitect/heading-highlighter.git
-cd heading-highlighter
+git clone https://github.com/TandemCreativeDev/fac-ws_extensions_heading-highlighter.git
+cd fac-ws_extensions_heading-highlighter
 ```
 
 ### **2. Install Dependencies**
