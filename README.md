@@ -36,7 +36,7 @@ src/
 The `utils` fodler has been deprecated as we are now targeting all tabs and this can be handled by our **background script**.
 
 > [!NOTE]
-> This is not the only way to solve this problem, but for plasmo to work you will need as a minimum `popup.tsx` in the `src` folder and either `content.ts` in the `src` folder or a `contents` folder with code files that interact with the webpages' DOM elements.
+> This is not the only way to solve this problem, but for plasmo to work you will need as a minimum `popup.tsx` in the `src` folder, a background service worker for messaging in the `background/messages/` folder and either `content.ts` in the `src` folder or a `contents` folder with code files that interact with the webpages' DOM elements.
 
 ## Run Solution
 
@@ -112,5 +112,66 @@ This will generate a `build` folder. To install it in Chrome:
 > ```
 >
 > These seem to be caused by the latest `plasmo` dependencies under its tailwind configuration. Although such an error may pop up, the project has built and you can load it into Chrome as described above.
+
+---
+
+## How It Works
+
+### **State Management Diagram**
+
+```mermaid
+stateDiagram-v2
+    [*] --> Popup: User opens extension
+
+    state Popup {
+        [*] --> Idle: Awaiting user action
+        Idle --> Toggling: User toggles highlight
+        Toggling --> Idle: Toggle action complete
+    }
+
+    Popup --> Background: Request current state
+    Background --> Popup: Provide in-memory isEnabled state
+
+    Popup --> Background: Update isEnabled
+    Background --> Webpage: Inject isEnabled as message
+    Webpage --> Content: Listen for state changes by message
+
+    state Content {
+        [*] --> Waiting: Awaiting state
+        Waiting --> Highlighting: Apply highlights
+        Highlighting --> Waiting: Awaiting further changes
+    }
+
+    Content --> Background: Request current state on page load
+    Background --> Content: Provide in-memory isEnabled state
+    Content --> Webpage: Apply or remove highlights
+```
+
+### **Code File Explanations**
+
+#### **Toggle Switch (`features/toggle.tsx`)**
+
+- Implements a **Tailwind-styled** toggle switch **React** component.
+- Uses `peer` class-based styling for visual state changes.
+
+#### **Popup (`popup.tsx`)**
+
+- Implements a **Tailwind-styled** popup menu **React** component, rendering **toggle switch** interaction and current highlighting state state (ON or OFF).
+- Manages the toggle switch state (`isEnabled`).
+- Requests the current state from the **background script** using `sendToBackground()`.
+- Updates the state when toggled and sends the new value to the **background script**.
+
+#### **Background Script (`background/messages/toggleState.ts`)**
+
+- Stores the `isEnabled` state **in memory** (resets when the extension reloads).
+- Responds to state requests from the **popup** and **content script** via `sendToBackground()`.
+- Notifies all open tabs of state changes by **injecting `window.postMessage()`** via `chrome.scripting.executeScript()`.
+
+#### **Content Script (`content.ts`)**
+
+- Runs on **all webpages** (`<all_urls>`).
+- On **page load**, requests the current `isEnabled` state from the **background script**.
+- Listens for **`TOGGLE_HIGHLIGHTS`** messages via `window.postMessage()`.
+- Dynamically updates heading background colors based on the received state.
 
 ---
